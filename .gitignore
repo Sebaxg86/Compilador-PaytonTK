@@ -1,0 +1,17 @@
+# Bloquear binarios de Java
+*.class
+*.jar
+*.war
+
+# Bloquear carpetas de compilación
+build/
+dist/
+
+# Bloquear basura de NetBeans
+nbproject/private/
+nbproject/genfiles.properties
+nbproject/project.updates
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
