@@ -257,7 +257,12 @@ public class SintacticoSemantico {
     
     private void RESULTADO(){
         if (preAnalisis.equals("")){
-            
+<<<<<<< HEAD
+            // Comentario
+            // Comentario 2
+=======
+            //Ccomentario
+>>>>>>> c490e93 (Proof)
         }
         else{
             
