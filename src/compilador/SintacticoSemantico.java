@@ -257,7 +257,8 @@ public class SintacticoSemantico {
     
     private void RESULTADO(){
         if (preAnalisis.equals("")){
-            
+            // Comentario
+            // Comentario 2
         }
         else{
             
