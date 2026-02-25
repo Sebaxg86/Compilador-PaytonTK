@@ -270,11 +270,19 @@ public class SintacticoSemantico {
     
     // ---------------- Procedure 10 ---------------
     private void RESULTADO(){
-        if (preAnalisis.equals("")){
+        if (preAnalisis.equals("id") ||
+            preAnalisis.equals("num") ||
+            preAnalisis.equals("num.num") ||
+            preAnalisis.equals("(") ||
+            preAnalisis.equals("literal")){
             
-        }
-        else{
-            
+            //RESULTADO -> EXPRESION
+            EXPRESION ();
+        }else if (preAnalisis.equals("void")){
+            //RESULTADO -> void
+            emparejar ("void");
+        }else{
+            error ("Se esperaba un resultado");
         }
     }
     
