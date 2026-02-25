@@ -1,6 +1,6 @@
 # Bloquear binarios de Java
 *.class
-*.jar
+# *.jar
 *.war
 
 # Bloquear carpetas de compilación
