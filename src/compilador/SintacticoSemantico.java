@@ -163,7 +163,7 @@ public class SintacticoSemantico {
     // ---------------- Procedure 3 ----------------
     private void FUNCION() {
         if (preAnalisis.equals("def")) {
-            // FUNCION → def id ( ARGUMENTOS ) : TIPO_RETORNO PROPOSICIONES_OPTATIVAS
+            // FUNCION → def id ( ARGUMENTOS ) : TIPO_RETORNO PROPOSICIONES_OPTATIVAS return RESULTADO
             emparejar("def");
             emparejar("id");
             emparejar("(");
@@ -172,8 +172,13 @@ public class SintacticoSemantico {
             emparejar(":");
             TIPO_RETORNO();
             PROPOSICIONES_OPTATIVAS();
+            
+            // <- FALTABA ESTA PARTE:
+            emparejar("return");
+            RESULTADO();
+            
         } else {
-            error("error");
+            error("Se esperaba la definicion de una funcion");
         }
     }
 
