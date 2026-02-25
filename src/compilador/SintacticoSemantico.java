@@ -288,11 +288,19 @@ public class SintacticoSemantico {
     
     // ---------------- Procedure 11 ---------------
     private void PROPOSICIONES_OPTATIVAS(){
-        if (preAnalisis.equals("")){
+        if (preAnalisis.equals("int") ||
+            preAnalisis.equals("float") ||
+            preAnalisis.equals("string") ||
+            preAnalisis.equals("id") ||
+            preAnalisis.equals("if") ||
+            preAnalisis.equals("while") ||
+            preAnalisis.equals("print")){
             
-        }
-        else{
-            
+            //PROPOSICIONES_OPTATIVAS -> PROPOSICION PROPOSICIONES_OPTATIVAS
+            PROPOSICION ();
+            PROPOSICIONES_OPTATIVAS();
+        }else{
+            //PROPOSICIONES_OPTATIVAS -> empty
         }
     }
     
