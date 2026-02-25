@@ -131,75 +131,71 @@ public class SintacticoSemantico {
     // =============================================
     
     // ---------------- Procedure 1 ----------------
-    private void PROGRAMA(){
-        if (preAnalisis.equals("def") || preAnalisis.equals("id") || preAnalisis.equals("if") ||
-            preAnalisis.equals("while") || preAnalisis.equals("print") || preAnalisis.equals("int") ||
-            preAnalisis.equals("float") || preAnalisis.equals("string")){
-             // PROGRAMA -> INSTRUCCION PROGRAMA 
+    private void PROGRAMA() {
+        if (preAnalisis.equals("def") || preAnalisis.equals("id") || preAnalisis.equals("if")
+                || preAnalisis.equals("while") || preAnalisis.equals("print") || preAnalisis.equals("int")
+                || preAnalisis.equals("float") || preAnalisis.equals("string")) {
+            // PROGRAMA -> INSTRUCCION PROGRAMA 
             INSTRUCCION();
             PROGRAMA();
-        }
-        else{
+        } else {
             //PROGRAMA -> empty
         }
     }
-    
+
     // ---------------- Procedure 2 ----------------
-    private void INSTRUCCION(){      
-        if (preAnalisis.equals("def")){
+    private void INSTRUCCION() {
+        if (preAnalisis.equals("def")) {
             //INSTRUCCION -> FUNCION 
             FUNCION();
-        }
-        else if (preAnalisis.equals("id") || preAnalisis.equals("if") ||
-            preAnalisis.equals("while") || preAnalisis.equals("print")){
+        } else if (preAnalisis.equals("id") || preAnalisis.equals("if")
+                || preAnalisis.equals("while") || preAnalisis.equals("print")) {
             //INSTRUCCION ->  PROPOSICION
             PROPOSICION();
-        }
-        else
+        } else {
             error("error");
+        }
     }
-    
+
     // ---------------- Procedure 3 ----------------
-    private void FUNCION(){
-        if (preAnalisis.equals("def")){
+    private void FUNCION() {
+        if (preAnalisis.equals("def")) {
             // FUNCION → def id ( ARGUMENTOS ) : TIPO_RETORNO PROPOSICIONES_OPTATIVAS
-            emparejar( "def" );
-            emparejar( "id" );
-            emparejar( "(" );
+            emparejar("def");
+            emparejar("id");
+            emparejar("(");
             ARGUMENTOS();
-            emparejar( ")" );
-            emparejar( ":" );
+            emparejar(")");
+            emparejar(":");
             TIPO_RETORNO();
             PROPOSICIONES_OPTATIVAS();
-        }
-        else
+        } else {
             error("error");
-    }
-    
-    // ---------------- Procedure 4 ----------------
-    private void ARGUMENTOS(){
-        if (preAnalisis.equals("int") ||
-            preAnalisis.equals("float") || preAnalisis.equals("string")){
-             // ARGUMENTOS -> TIPO_DATO  id  ARGUMENTOS’
-            TIPO_DATO();
-            emparejar( "id" );
-            ARGUMENTOS_2();
         }
-        else{
+    }
+
+    // ---------------- Procedure 4 ----------------
+    private void ARGUMENTOS() {
+        if (preAnalisis.equals("int")
+                || preAnalisis.equals("float") || preAnalisis.equals("string")) {
+            // ARGUMENTOS -> TIPO_DATO  id  ARGUMENTOS’
+            TIPO_DATO();
+            emparejar("id");
+            ARGUMENTOS_2();
+        } else {
             //ARGUMENTOS -> empty
         }
     }
-    
+
     // ---------------- Procedure 5 ----------------
-    private void ARGUMENTOS_2(){
-        if (preAnalisis.equals(",")){
+    private void ARGUMENTOS_2() {
+        if (preAnalisis.equals(",")) {
             // ARGUMENTOS -> ,  TIPO_DATO  id  ARGUMENTOS’
-            emparejar( "," );
+            emparejar(",");
             TIPO_DATO();
-            emparejar( "id" );
+            emparejar("id");
             ARGUMENTOS_2();
-        }
-        else{
+        } else {
             //ARGUMENTOS_2 -> empty
         }
     }
@@ -210,49 +206,44 @@ public class SintacticoSemantico {
     // =============================================
     
     // ---------------- Procedure 6 ----------------
-    private void DECLARACION_VARS(){
-    if (preAnalisis.equals("int") ||
-        preAnalisis.equals("float") ||
-        preAnalisis.equals("string")){
-        
-        // DECLARACION_VARS -> TIPO_DATO id DECLARACION_VARS’
-        TIPO_DATO();
-        emparejar("id");
-        DECLARACION_VARS_2();
-    }
-    else{
-        error("Declaracion de variables invalida");
-    }
+    private void DECLARACION_VARS() {
+        if (preAnalisis.equals("int")
+                || preAnalisis.equals("float")
+                || preAnalisis.equals("string")) {
+
+            // DECLARACION_VARS -> TIPO_DATO id DECLARACION_VARS’
+            TIPO_DATO();
+            emparejar("id");
+            DECLARACION_VARS_2();
+        } else {
+            error("Declaracion de variables invalida");
+        }
     }
     
     // ---------------- Procedure 7 ----------------
-    private void DECLARACION_VARS_2(){
-    if (preAnalisis.equals(",")){
-        // DECLARACION_VARS’ -> , id DECLARACION_VARS’
-        emparejar(",");
-        emparejar("id");
-        DECLARACION_VARS_2();
+    private void DECLARACION_VARS_2() {
+        if (preAnalisis.equals(",")) {
+            // DECLARACION_VARS’ -> , id DECLARACION_VARS’
+            emparejar(",");
+            emparejar("id");
+            DECLARACION_VARS_2();
+        } else {
+            // DECLARACION_VARS_2 -> empty
+        }
     }
-    else{
-        // DECLARACION_VARS_2 -> empty
-    }
-}
     
     // ---------------- Procedure 8 ----------------
-    private void TIPO_DATO(){
-    if (preAnalisis.equals("int")){
-        emparejar("int");
+    private void TIPO_DATO() {
+        if (preAnalisis.equals("int")) {
+            emparejar("int");
+        } else if (preAnalisis.equals("float")) {
+            emparejar("float");
+        } else if (preAnalisis.equals("string")) {
+            emparejar("string");
+        } else {
+            error("Tipo de dato invalido");
+        }
     }
-    else if (preAnalisis.equals("float")){
-        emparejar("float");
-    }
-    else if (preAnalisis.equals("string")){
-        emparejar("string");
-    }
-    else{
-        error("Tipo de dato invalido");
-    }
-}
     
     // ---------------- Procedure 9 ----------------
     private void TIPO_RETORNO() {
@@ -310,127 +301,110 @@ public class SintacticoSemantico {
     // =============================================
     
     // ---------------- Procedure 12 ---------------
-    private void PROPOSICION(){
+    private void PROPOSICION() {
 
-    if (preAnalisis.equals("int") ||
-        preAnalisis.equals("float") ||
-        preAnalisis.equals("string")){
-        
-        // PROPOSICION -> DECLARACION_VARS
-        DECLARACION_VARS();
+        if (preAnalisis.equals("int")
+                || preAnalisis.equals("float")
+                || preAnalisis.equals("string")) {
+
+            // PROPOSICION -> DECLARACION_VARS
+            DECLARACION_VARS();
+        } else if (preAnalisis.equals("id")) {
+            // PROPOSICION -> id PROPOSICION’
+            emparejar("id");
+            PROPOSICION_2();
+        } else if (preAnalisis.equals("if")) {
+            // PROPOSICION -> if CONDICION : PROPOSICIONES_OPTATIVAS else : PROPOSICIONES_OPTATIVAS ::
+            emparejar("if");
+            CONDICION();
+            emparejar(":");
+            PROPOSICIONES_OPTATIVAS();
+            emparejar("else");
+            emparejar(":");
+            PROPOSICIONES_OPTATIVAS();
+            emparejar("::");
+        } else if (preAnalisis.equals("while")) {
+            // PROPOSICION -> while CONDICION : PROPOSICIONES_OPTATIVAS ::
+            emparejar("while");
+            CONDICION();
+            emparejar(":");
+            PROPOSICIONES_OPTATIVAS();
+            emparejar("::");
+        } else if (preAnalisis.equals("print")) {
+            // PROPOSICION -> print ( EXPRESION )
+            emparejar("print");
+            emparejar("(");
+            EXPRESION();
+            emparejar(")");
+        } else {
+            error("Proposicion invalida");
+        }
     }
 
-    else if (preAnalisis.equals("id")){
-        // PROPOSICION -> id PROPOSICION’
-        emparejar("id");
-        PROPOSICION_2();
-    }
-
-    else if (preAnalisis.equals("if")){
-        // PROPOSICION -> if CONDICION : PROPOSICIONES_OPTATIVAS else : PROPOSICIONES_OPTATIVAS ::
-        emparejar("if");
-        CONDICION();
-        emparejar(":");
-        PROPOSICIONES_OPTATIVAS();
-        emparejar("else");
-        emparejar(":");
-        PROPOSICIONES_OPTATIVAS();
-        emparejar("::");
-    }
-
-    else if (preAnalisis.equals("while")){
-        // PROPOSICION -> while CONDICION : PROPOSICIONES_OPTATIVAS ::
-        emparejar("while");
-        CONDICION();
-        emparejar(":");
-        PROPOSICIONES_OPTATIVAS();
-        emparejar("::");
-    }
-
-    else if (preAnalisis.equals("print")){
-        // PROPOSICION -> print ( EXPRESION )
-        emparejar("print");
-        emparejar("(");
-        EXPRESION();
-        emparejar(")");
-    }
-
-    else{
-        error("Proposicion invalida");
-    }
-}
-    
     // ---------------- Procedure 13 ---------------
-    private void PROPOSICION_2(){
+    private void PROPOSICION_2() {
 
-    if (preAnalisis.equals("opasig")){
-        // PROPOSICION’ -> opasig EXPRESION
-        emparejar("opasig");
-        EXPRESION();
+        if (preAnalisis.equals("opasig")) {
+            // PROPOSICION’ -> opasig EXPRESION
+            emparejar("opasig");
+            EXPRESION();
+        } else if (preAnalisis.equals("(")) {
+            // PROPOSICION’ -> ( LISTA_EXPRESIONES )
+            emparejar("(");
+            LISTA_EXPRESIONES();
+            emparejar(")");
+        } else {
+            error("Se esperaba asignacion o llamada a funcion");
+        }
     }
 
-    else if (preAnalisis.equals("(")){
-        // PROPOSICION’ -> ( LISTA_EXPRESIONES )
-        emparejar("(");
-        LISTA_EXPRESIONES();
-        emparejar(")");
-    }
-
-    else{
-        error("Se esperaba asignacion o llamada a funcion");
-    }
-}
-    
     // ---------------- Procedure 14 ---------------
-    private void LISTA_EXPRESIONES(){
+    private void LISTA_EXPRESIONES() {
 
-    if (preAnalisis.equals("id") ||
-        preAnalisis.equals("num") ||
-        preAnalisis.equals("num.num") ||
-        preAnalisis.equals("(") ||
-        preAnalisis.equals("literal")){
-        
-        // LISTA_EXPRESIONES -> EXPRESION LISTA_EXPRESIONES’
-        EXPRESION();
-        LISTA_EXPRESIONES_2();
+        if (preAnalisis.equals("id")
+                || preAnalisis.equals("num")
+                || preAnalisis.equals("num.num")
+                || preAnalisis.equals("(")
+                || preAnalisis.equals("literal")) {
+
+            // LISTA_EXPRESIONES -> EXPRESION LISTA_EXPRESIONES’
+            EXPRESION();
+            LISTA_EXPRESIONES_2();
+        } else {
+            // LISTA_EXPRESIONES -> empty
+        }
     }
-    else{
-        // LISTA_EXPRESIONES -> empty
-    }
-}
-    
+
     // ---------------- Procedure 15 ---------------
-    private void LISTA_EXPRESIONES_2(){
+    private void LISTA_EXPRESIONES_2() {
 
-    if (preAnalisis.equals(",")){
-        // LISTA_EXPRESIONES’ -> , EXPRESION LISTA_EXPRESIONES’
-        emparejar(",");
-        EXPRESION();
-        LISTA_EXPRESIONES_2();
+        if (preAnalisis.equals(",")) {
+            // LISTA_EXPRESIONES’ -> , EXPRESION LISTA_EXPRESIONES’
+            emparejar(",");
+            EXPRESION();
+            LISTA_EXPRESIONES_2();
+        } else {
+            // LISTA_EXPRESIONES_2 -> empty
+        }
     }
-    else{
-        // LISTA_EXPRESIONES_2 -> empty
-    }
-}
-    
+
     // ---------------- Procedure 16 ---------------
-    private void CONDICION(){
+    private void CONDICION() {
 
-    if (preAnalisis.equals("id") ||
-        preAnalisis.equals("num") ||
-        preAnalisis.equals("num.num") ||
-        preAnalisis.equals("(") ||
-        preAnalisis.equals("literal")){
-        
-        // CONDICION -> EXPRESION oprel EXPRESION
-        EXPRESION();
-        emparejar("oprel");
-        EXPRESION();
+        if (preAnalisis.equals("id")
+                || preAnalisis.equals("num")
+                || preAnalisis.equals("num.num")
+                || preAnalisis.equals("(")
+                || preAnalisis.equals("literal")) {
+
+            // CONDICION -> EXPRESION oprel EXPRESION
+            EXPRESION();
+            emparejar("oprel");
+            EXPRESION();
+        } else {
+            error("Condicion invalida");
+        }
     }
-    else{
-        error("Condicion invalida");
-    }
-}
     
     
     // =============================================
@@ -438,108 +412,98 @@ public class SintacticoSemantico {
     // =============================================
     
     // ---------------- Procedure 17 ---------------
-    private void EXPRESION(){ //CORRECCION DE MI BRO: Corrijo la recursión infinita manteniendo tu estilo:
+    private void EXPRESION() { //CORRECCION DE MI BRO: Corrijo la recursión infinita manteniendo tu estilo:
 
-    if (preAnalisis.equals("id") ||
-        preAnalisis.equals("num") ||
-        preAnalisis.equals("num.num") ||
-        preAnalisis.equals("(")){
-        
-        // EXPRESION -> TERMINO EXPRESION’
-        TERMINO();
-        EXPRESION_2();
+        if (preAnalisis.equals("id")
+                || preAnalisis.equals("num")
+                || preAnalisis.equals("num.num")
+                || preAnalisis.equals("(")) {
+
+            // EXPRESION -> TERMINO EXPRESION’
+            TERMINO();
+            EXPRESION_2();
+        } else if (preAnalisis.equals("literal")) {
+            // EXPRESION -> literal
+            emparejar("literal");
+        } else {
+            error("Expresion invalida");
+        }
     }
-    else if (preAnalisis.equals("literal")){
-        // EXPRESION -> literal
-        emparejar("literal");
-    }
-    else{
-        error("Expresion invalida");
-    }
-}
-    
+
     // ---------------- Procedure 18 ---------------
-    private void EXPRESION_2(){
+    private void EXPRESION_2() {
 
-    if (preAnalisis.equals("opsuma")){
-        // EXPRESION’ -> opsuma TERMINO EXPRESION’
-        emparejar("opsuma");
-        TERMINO();
-        EXPRESION_2();
+        if (preAnalisis.equals("opsuma")) {
+            // EXPRESION’ -> opsuma TERMINO EXPRESION’
+            emparejar("opsuma");
+            TERMINO();
+            EXPRESION_2();
+        } else {
+            // EXPRESION_2 -> empty
+        }
     }
-    else{
-        // EXPRESION_2 -> empty
-    }
-}
-    
+
     // ---------------- Procedure 19 ---------------
-    private void TERMINO(){
+    private void TERMINO() {
 
-    if (preAnalisis.equals("id") ||
-        preAnalisis.equals("num") ||
-        preAnalisis.equals("num.num") ||
-        preAnalisis.equals("(")){
-        
-        // TERMINO -> FACTOR TERMINO’
-        FACTOR();
-        TERMINO_2();
+        if (preAnalisis.equals("id")
+                || preAnalisis.equals("num")
+                || preAnalisis.equals("num.num")
+                || preAnalisis.equals("(")) {
+
+            // TERMINO -> FACTOR TERMINO’
+            FACTOR();
+            TERMINO_2();
+        } else {
+            error("Termino invalido");
+        }
     }
-    else{
-        error("Termino invalido");
-    }
-}
-    
+
     // ---------------- Procedure 20 ---------------
-    private void TERMINO_2(){
+    private void TERMINO_2() {
 
-    if (preAnalisis.equals("opmult")){
-        // TERMINO’ -> opmult FACTOR TERMINO’
-        emparejar("opmult");
-        FACTOR();
-        TERMINO_2();
+        if (preAnalisis.equals("opmult")) {
+            // TERMINO’ -> opmult FACTOR TERMINO’
+            emparejar("opmult");
+            FACTOR();
+            TERMINO_2();
+        } else {
+            // TERMINO_2 -> empty
+        }
     }
-    else{
-        // TERMINO_2 -> empty
-    }
-}
-    
+
     // ---------------- Procedure 21 ---------------
-    private void FACTOR(){
+    private void FACTOR() {
 
-    if (preAnalisis.equals("id")){
-        // FACTOR -> id FACTOR’
-        emparejar("id");
-        FACTOR_2();
+        if (preAnalisis.equals("id")) {
+            // FACTOR -> id FACTOR’
+            emparejar("id");
+            FACTOR_2();
+        } else if (preAnalisis.equals("num")) {
+            emparejar("num");
+        } else if (preAnalisis.equals("num.num")) {
+            emparejar("num.num");
+        } else if (preAnalisis.equals("(")) {
+            emparejar("(");
+            EXPRESION();
+            emparejar(")");
+        } else {
+            error("Factor invalido");
+        }
     }
-    else if (preAnalisis.equals("num")){
-        emparejar("num");
-    }
-    else if (preAnalisis.equals("num.num")){
-        emparejar("num.num");
-    }
-    else if (preAnalisis.equals("(")){
-        emparejar("(");
-        EXPRESION();
-        emparejar(")");
-    }
-    else{
-        error("Factor invalido");
-    }
-}
-    
+
     // ---------------- Procedure 22 ---------------
-    private void FACTOR_2(){
+    private void FACTOR_2() {
 
-    if (preAnalisis.equals("(")){
-        // FACTOR’ -> ( LISTA_EXPRESIONES )
-        emparejar("(");
-        LISTA_EXPRESIONES();
-        emparejar(")");
+        if (preAnalisis.equals("(")) {
+            // FACTOR’ -> ( LISTA_EXPRESIONES )
+            emparejar("(");
+            LISTA_EXPRESIONES();
+            emparejar(")");
+        } else {
+            // FACTOR_2 -> empty
+        }
     }
-    else{
-        // FACTOR_2 -> empty
-    }
-}
     
 }
 //------------------------------------------------------------------------------
