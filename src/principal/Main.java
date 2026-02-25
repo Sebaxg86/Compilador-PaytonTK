@@ -48,10 +48,10 @@ public class Main {
     // Nombres a desplegar en el "Acerca de" como colaboradores .
     
     public static final String [] colaboradores = { 
-        "Lenguajes y Automatas II :: Grupo A 7-8am :: Semestre Ago-Dic/2023",
-        "Latko Petrovic  (01130469)", 
-        "Jan Zmuda       (02131201)",
-        "Karel Sciekanowsky",
-        "Illie Dumistrescu" 
+        "Lenguajes y Automatas II :: Grupo A 8-9am :: Semestre Ene-Jun/2026",
+        "Sergio    (01130469)", 
+        "Derek     (02131201)",
+        "Ricardo   (03020345)",
+        "Sebastian (04867329)" 
     };     
 }
