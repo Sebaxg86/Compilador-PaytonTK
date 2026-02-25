@@ -149,11 +149,14 @@ public class SintacticoSemantico {
             //INSTRUCCION -> FUNCION 
             FUNCION();
         } else if (preAnalisis.equals("id") || preAnalisis.equals("if")
-                || preAnalisis.equals("while") || preAnalisis.equals("print")) {
+                || preAnalisis.equals("while") || preAnalisis.equals("print")
+                || preAnalisis.equals("int") || preAnalisis.equals("float") 
+                || preAnalisis.equals("string")) {
+            
             //INSTRUCCION ->  PROPOSICION
             PROPOSICION();
         } else {
-            error("error");
+            error("Se esperaba una instruccion o funcion");
         }
     }
 
