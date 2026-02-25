@@ -126,6 +126,11 @@ public class SintacticoSemantico {
     //  *  *   *   *    PEGAR AQUI EL CODIGO DE LOS PROCEDURES  *  *  *  *
     //--------------------------------------------------------------------------
 
+    // =============================================
+    // ================ Sergio =====================
+    // =============================================
+    
+    // ---------------- Procedure 1 ----------------
     private void PROGRAMA(){
         if (preAnalisis.equals("def") || preAnalisis.equals("id") || preAnalisis.equals("if") ||
             preAnalisis.equals("while") || preAnalisis.equals("print") || preAnalisis.equals("int") ||
@@ -139,6 +144,7 @@ public class SintacticoSemantico {
         }
     }
     
+    // ---------------- Procedure 2 ----------------
     private void INSTRUCCION(){      
         if (preAnalisis.equals("def")){
             //INSTRUCCION -> FUNCION 
@@ -153,6 +159,7 @@ public class SintacticoSemantico {
             error("error");
     }
     
+    // ---------------- Procedure 3 ----------------
     private void FUNCION(){
         if (preAnalisis.equals("def")){
             // FUNCION → def id ( ARGUMENTOS ) : TIPO_RETORNO PROPOSICIONES_OPTATIVAS
@@ -169,6 +176,7 @@ public class SintacticoSemantico {
             error("error");
     }
     
+    // ---------------- Procedure 4 ----------------
     private void ARGUMENTOS(){
         if (preAnalisis.equals("int") ||
             preAnalisis.equals("float") || preAnalisis.equals("string")){
@@ -182,6 +190,7 @@ public class SintacticoSemantico {
         }
     }
     
+    // ---------------- Procedure 5 ----------------
     private void ARGUMENTOS_2(){
         if (preAnalisis.equals(",")){
             // ARGUMENTOS -> ,  TIPO_DATO  id  ARGUMENTOS’
@@ -195,6 +204,12 @@ public class SintacticoSemantico {
         }
     }
     
+    
+    // =============================================
+    // ================ Sebas ======================
+    // =============================================
+    
+    // ---------------- Procedure 6 ----------------
     private void DECLARACION_VARS(){
     if (preAnalisis.equals("int") ||
         preAnalisis.equals("float") ||
@@ -210,6 +225,7 @@ public class SintacticoSemantico {
     }
     }
     
+    // ---------------- Procedure 7 ----------------
     private void DECLARACION_VARS_2(){
     if (preAnalisis.equals(",")){
         // DECLARACION_VARS’ -> , id DECLARACION_VARS’
@@ -222,6 +238,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 8 ----------------
     private void TIPO_DATO(){
     if (preAnalisis.equals("int")){
         emparejar("int");
@@ -237,6 +254,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 9 ----------------
     private void TIPO_RETORNO(){
     if (preAnalisis.equals("void")){
         emparejar("void");
@@ -255,6 +273,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 10 ---------------
     private void RESULTADO(){
         if (preAnalisis.equals("")){
             
@@ -264,6 +283,7 @@ public class SintacticoSemantico {
         }
     }
     
+    // ---------------- Procedure 11 ---------------
     private void PROPOSICIONES_OPTATIVAS(){
         if (preAnalisis.equals("")){
             
@@ -273,6 +293,12 @@ public class SintacticoSemantico {
         }
     }
     
+    
+    // =============================================
+    // ================ Derek ======================
+    // =============================================
+    
+    // ---------------- Procedure 12 ---------------
     private void PROPOSICION(){
 
     if (preAnalisis.equals("int") ||
@@ -323,6 +349,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 13 ---------------
     private void PROPOSICION_2(){
 
     if (preAnalisis.equals("opasig")){
@@ -343,6 +370,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 14 ---------------
     private void LISTA_EXPRESIONES(){
 
     if (preAnalisis.equals("id") ||
@@ -360,6 +388,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 15 ---------------
     private void LISTA_EXPRESIONES_2(){
 
     if (preAnalisis.equals(",")){
@@ -373,6 +402,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 16 ---------------
     private void CONDICION(){
 
     if (preAnalisis.equals("id") ||
@@ -391,6 +421,12 @@ public class SintacticoSemantico {
     }
 }
     
+    
+    // =============================================
+    // ================ Ricardo ====================
+    // =============================================
+    
+    // ---------------- Procedure 17 ---------------
     private void EXPRESION(){ //CORRECCION DE MI BRO: Corrijo la recursión infinita manteniendo tu estilo:
 
     if (preAnalisis.equals("id") ||
@@ -411,6 +447,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 18 ---------------
     private void EXPRESION_2(){
 
     if (preAnalisis.equals("opsuma")){
@@ -424,6 +461,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 19 ---------------
     private void TERMINO(){
 
     if (preAnalisis.equals("id") ||
@@ -440,6 +478,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 20 ---------------
     private void TERMINO_2(){
 
     if (preAnalisis.equals("opmult")){
@@ -453,6 +492,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 21 ---------------
     private void FACTOR(){
 
     if (preAnalisis.equals("id")){
@@ -476,6 +516,7 @@ public class SintacticoSemantico {
     }
 }
     
+    // ---------------- Procedure 22 ---------------
     private void FACTOR_2(){
 
     if (preAnalisis.equals("(")){
