@@ -255,23 +255,18 @@ public class SintacticoSemantico {
 }
     
     // ---------------- Procedure 9 ----------------
-    private void TIPO_RETORNO(){
-    if (preAnalisis.equals("void")){
-        emparejar("void");
+    private void TIPO_RETORNO() {
+        if (preAnalisis.equals("void")){
+            emparejar ("void");
+        }else if (preAnalisis.equals("int") ||
+                  preAnalisis.equals("float") ||
+                  preAnalisis.equals("string")){
+            // TIPO_RETORNO -> TIPO_DATO
+            TIPO_DATO();
+        }else{
+            error ("Se esperaba un tipo de retorno");
+        }
     }
-    else if (preAnalisis.equals("int")){
-        emparejar("int");
-    }
-    else if (preAnalisis.equals("float")){
-        emparejar("float");
-    }
-    else if (preAnalisis.equals("string")){
-        emparejar("string");
-    }
-    else{
-        error("Tipo de retorno invalido");
-    }
-}
     
     // ---------------- Procedure 10 ---------------
     private void RESULTADO(){
