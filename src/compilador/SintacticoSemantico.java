@@ -28,7 +28,7 @@
  *:                                 sintactico.
  *: 20/FEB/2023 F.Gil, Oswi         -Se implementaron los procedures del parser
  *:                                  predictivo recursivo de leng BasicTec.
- *: 07/MAY/2026 Codex               -Se agrego el analisis semantico siguiendo
+ *: 07/MAY/2026 Sebas               -Se agrego el analisis semantico siguiendo
  *:                                  el metodo clasico del Libro del Dragon:
  *:                                  atributos, acciones semanticas embebidas y
  *:                                  preregistro de firmas de funciones.

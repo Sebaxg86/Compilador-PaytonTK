@@ -21,11 +21,20 @@
 ## 4.3-mapeo-a-parser-actual.md
 - Mapea el esquema de traduccion y la guia clasica de implementacion al parser actual de `SintacticoSemantico.java`, sin salir del metodo de Gil y del Libro del Dragon.
 
-## 05-formato-entrega
+## 05-formato-entrega.md
 - Reglas para la entrega de resultados
 
-## 06-casos-prueba
+## 06-casos-prueba.md
 - Contiene ejemplos concretos de programas correctos y erroneos para el lenguaje PaytonTK
 
-## 07-esquema-traduccion.md
-- Contiene exclusivamente el esquema de traducción de PaytonTK para la etapa semántica, en el formato solicitado por el Ing. Gil
+## 07-guia_gci_esquema_traduccion.md
+- Contiene una guia maestra para generar el esquema de traducción para el codigo intermedio
+
+## 7.1-guia_infijo_a_prefijo.md
+- Guia para convertir infijo a prefijo segun los estandares
+
+## 7.2-guia_polaca_a_c3d.md
+- Guia para usar la notación polaca a codigo 3 direcciones
+
+## 7.3-esquema-traduccion-gci-paytontk.md
+- Contiene el esquema de traduccion especifico de PaytonTK para la etapa de Generacion de Codigo Intermedio, con producciones y acciones numeradas.

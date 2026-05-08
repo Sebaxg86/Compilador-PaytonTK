@@ -392,3 +392,31 @@ s = func_5 ( 1 )
 i = func_6 ( 2 * i, f )
 f = func_7 ( i, i * 2 + 6, "hola" )
 ```
+
+## Programas de prueba correctos para la etapa de Generación de Código Intermedio
+
+Ejemplo 1: 01-Asignaciones1.py
+```
+int x, y, z
+z  = (  2 *  ( x + 1 ) ) + y 
+```
+
+Ejemplo 2: 02-Asignaciones2.py
+```
+int x, y, z
+z  = 125 * x * x + 10 * y + 99
+```
+
+Ejemplo 3: 03-Asignaciones3.py
+```
+int x, y, z
+z  = 20 * ( ( y + 3 ) + 12 ) * 1 + x 
+```
+
+Ejemplo 4: 04-Asignaciones4.py
+```
+int x, y, z
+z  = (  2 *  ( x + 1 ) ) + y 
+z  = 125 * x * x + 10 * y + 99
+z  = 20 * ( ( y + 3 ) + 12 ) * 1 + x 
+```
