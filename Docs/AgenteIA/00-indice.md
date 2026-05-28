@@ -38,3 +38,6 @@
 
 ## 7.3-esquema-traduccion-gci-paytontk.md
 - Contiene el esquema de traduccion especifico de PaytonTK para la etapa de Generacion de Codigo Intermedio, con producciones y acciones numeradas.
+
+## 08-explicacion-implementacion-gco.md
+- Explica exactamente que se modifico en `GenCodigoObj.java`, en que orden se ejecuta y que hace cada parte de la implementacion de Generacion de Codigo Objeto.
