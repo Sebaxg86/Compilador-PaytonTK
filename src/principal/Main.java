@@ -49,9 +49,9 @@ public class Main {
     
     public static final String [] colaboradores = { 
         "Lenguajes y Automatas II :: Grupo A 8-9am :: Semestre Ene-Jun/2026",
-        "Sergio    (01130469)", 
-        "Derek     (02131201)",
-        "Ricardo   (03020345)",
-        "Sebastian (04867329)" 
+        "Martin Sebastian Gonzalez Chairez (#21130835)",
+        "Ricardo García Martínez (#22130852)",
+        "Sergio Antonio Contreras Guerrero (#22131364)",
+        "Derek Romo Flores (#23130525)"
     };     
 }
