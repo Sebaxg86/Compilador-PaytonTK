@@ -23,13 +23,14 @@
  *: 08/MAY/2026 Sebas               -Se implemento el generador de Codigo
  *:                                 Intermedio de PaytonTK con acciones
  *:                                 semanticas embebidas y emision de
- *:                                 cuadruplos/C3D.
+ *:                                 C3D.
  *:-----------------------------------------------------------------------------
  */
 
 package compilador;
 
 import general.Linea_BE;
+import java.util.ArrayList;
 
 public class GenCodigoInt {
 
@@ -39,6 +40,7 @@ public class GenCodigoInt {
     private String preAnalisis;
     private int consecutivoTemp = 1;
     private int consecutivoEtiq = 1;
+    private final ArrayList<String> codigoIntermedio = new ArrayList<String>();
 
     //--------------------------------------------------------------------------
     // Constructor de la clase, recibe la referencia de la clase principal del
@@ -50,9 +52,12 @@ public class GenCodigoInt {
     // Fin del Constructor
     //--------------------------------------------------------------------------
 
+    // Punto de entrada de la etapa: recorre el buffer de entrada, emite C3D
+    // y al final construye la tabla de cuadruplos desde ese C3D.
     public void generar() {
         consecutivoTemp = 1;
         consecutivoEtiq = 1;
+        codigoIntermedio.clear();
         preAnalisis = cmp.be.preAnalisis.complex;
 
         Atributos programa = new Atributos();
@@ -61,10 +66,13 @@ public class GenCodigoInt {
         if (!preAnalisis.equals("$")) {
             errorEmparejar("$", cmp.be.preAnalisis.lexema, cmp.be.preAnalisis.numLinea);
         }
+
+        cmp.cua.generarDesdeCodigoIntermedio(codigoIntermedio);
     }
 
     //--------------------------------------------------------------------------
 
+    // Consume el token esperado por la produccion actual del parser predictivo.
     private void emparejar(String t) {
         if (cmp.be.preAnalisis.complex.equals(t)) {
             cmp.be.siguiente();
@@ -76,6 +84,7 @@ public class GenCodigoInt {
 
     //--------------------------------------------------------------------------
 
+    // Reporta errores de token esperado durante la pasada de GCI.
     private void errorEmparejar(String tokenEsperado, String lexemaEncontrado, int numLinea) {
         String msjError = "";
 
@@ -110,6 +119,7 @@ public class GenCodigoInt {
 
     //--------------------------------------------------------------------------
 
+    // Reporta errores generales de la gramatica durante la generacion de C3D.
     private void error(String descripError) {
         cmp.me.error(Compilador.ERR_CODINT, descripError);
 
@@ -122,40 +132,48 @@ public class GenCodigoInt {
     // Rutinas auxiliares de generacion de codigo intermedio
     //--------------------------------------------------------------------------
 
+    // Consume el cierre de bloque "::" de PaytonTK.
     private void emparejarFinBloque() {
         // El lexer actual entrega "::" como dos tokens ":" consecutivos.
         emparejar(":");
         emparejar(":");
     }
 
+    // Conjunto PRIMERO usado para decidir si aun hay instrucciones por procesar.
     private boolean esInicioPrograma() {
         return "def".equals(preAnalisis) || esInicioProposicion();
     }
 
+    // Conjunto PRIMERO de los tipos declarables en PaytonTK.
     private boolean esInicioTipoDato() {
         return "int".equals(preAnalisis) || "float".equals(preAnalisis)
                 || "string".equals(preAnalisis);
     }
 
+    // Conjunto PRIMERO de una proposicion del lenguaje.
     private boolean esInicioProposicion() {
         return esInicioTipoDato() || "id".equals(preAnalisis) || "if".equals(preAnalisis)
                 || "while".equals(preAnalisis) || "print".equals(preAnalisis);
     }
 
+    // Conjunto PRIMERO de una expresion aritmetica o literal.
     private boolean esInicioExpresion() {
         return "id".equals(preAnalisis) || "num".equals(preAnalisis)
                 || "num.num".equals(preAnalisis) || "(".equals(preAnalisis)
                 || "literal".equals(preAnalisis);
     }
 
+    // Genera nombres temporales para almacenar resultados intermedios de C3D.
     private String tempnuevo() {
         return "t" + consecutivoTemp++;
     }
 
+    // Genera etiquetas para saltos y puntos de control del C3D.
     private String etiqnueva() {
         return "etiq" + consecutivoEtiq++;
     }
 
+    // Convierte la referencia de una funcion en una etiqueta interna estable.
     private String etiqfun(String entrada) {
         if (entrada == null || "".equals(entrada)) {
             return "fun0";
@@ -168,6 +186,7 @@ public class GenCodigoInt {
         return "fun_" + entrada.replace(' ', '_');
     }
 
+    // Obtiene el lugar de un token: referencia [n] a TS o lexema directo.
     private String referencia(Linea_BE token) {
         if (token == null) {
             return NIL;
@@ -180,46 +199,49 @@ public class GenCodigoInt {
         return token.getLexema();
     }
 
+    // Reconoce el valor especial usado para representar ausencia de resultado.
     private boolean esNil(String lugar) {
         return lugar == null || "".equals(lugar) || NIL.equals(lugar);
     }
 
+    // Emite una proposicion de tres direcciones textual; los cuadruplos se
+    // construyen despues a partir de la lista codigoIntermedio.
     private void emite(String op, String arg1, String arg2, String resultado) {
-        Cuadruplo cuadruplo = new Cuadruplo(op, arg1, arg2, resultado);
-        cmp.cua.agregar(cuadruplo);
+        String sentencia = formatearC3D(op, arg1, arg2, resultado);
+        codigoIntermedio.add(sentencia);
 
         if (cmp.iuListener != null) {
-            cmp.iuListener.mostrarCodInt(formatearCuadruplo(cuadruplo));
+            cmp.iuListener.mostrarCodInt(sentencia);
         }
     }
 
-    private String formatearCuadruplo(Cuadruplo cuadruplo) {
-        if ("label".equals(cuadruplo.op)) {
-            return cuadruplo.resultado + ":";
-        } else if ("goto".equals(cuadruplo.op)) {
-            return "goto " + cuadruplo.resultado;
-        } else if (cuadruplo.op.startsWith("if")) {
-            return "if " + cuadruplo.arg1 + " " + cuadruplo.op.substring(2) + " "
-                    + cuadruplo.arg2 + " goto " + cuadruplo.resultado;
-        } else if (":=".equals(cuadruplo.op)) {
-            return cuadruplo.resultado + " := " + cuadruplo.arg1;
-        } else if ("param".equals(cuadruplo.op)) {
-            return "param " + cuadruplo.arg1;
-        } else if ("call".equals(cuadruplo.op)) {
-            if ("".equals(cuadruplo.resultado)) {
-                return "call " + cuadruplo.arg1 + ", " + cuadruplo.arg2;
+    // Traduce los campos logicos de una instruccion a la forma textual de C3D.
+    private String formatearC3D(String op, String arg1, String arg2, String resultado) {
+        if ("label".equals(op)) {
+            return resultado + ":";
+        } else if ("goto".equals(op)) {
+            return "goto " + resultado;
+        } else if (op.startsWith("if")) {
+            return "if " + arg1 + " " + op.substring(2) + " "
+                    + arg2 + " goto " + resultado;
+        } else if (":=".equals(op)) {
+            return resultado + " := " + arg1;
+        } else if ("param".equals(op)) {
+            return "param " + arg1;
+        } else if ("call".equals(op)) {
+            if ("".equals(resultado)) {
+                return "call " + arg1 + ", " + arg2;
             }
-            return cuadruplo.resultado + " := call " + cuadruplo.arg1 + ", " + cuadruplo.arg2;
-        } else if ("return".equals(cuadruplo.op)) {
-            return "".equals(cuadruplo.arg1) ? "return" : "return " + cuadruplo.arg1;
-        } else if ("print".equals(cuadruplo.op)) {
-            return "print " + cuadruplo.arg1;
-        } else if ("".equals(cuadruplo.arg2)) {
-            return cuadruplo.resultado + " := " + cuadruplo.op + " " + cuadruplo.arg1;
+            return resultado + " := call " + arg1 + ", " + arg2;
+        } else if ("return".equals(op)) {
+            return "".equals(arg1) ? "return" : "return " + arg1;
+        } else if ("print".equals(op)) {
+            return "print " + arg1;
+        } else if ("".equals(arg2)) {
+            return resultado + " := " + op + " " + arg1;
         }
 
-        return cuadruplo.resultado + " := " + cuadruplo.arg1 + " " + cuadruplo.op
-                + " " + cuadruplo.arg2;
+        return resultado + " := " + arg1 + " " + op + " " + arg2;
     }
 
     //--------------------------------------------------------------------------
@@ -227,6 +249,7 @@ public class GenCodigoInt {
     //--------------------------------------------------------------------------
 
     // ---------------- Procedure 1 ----------------
+    // Reconoce el programa completo como una secuencia de instrucciones.
     private void PROGRAMA(Atributos _PROGRAMA) {
         Atributos _INSTRUCCION = new Atributos();
         Atributos _PROGRAMA1 = new Atributos();
@@ -249,6 +272,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 2 ----------------
+    // Despacha cada instruccion hacia declaracion de funcion o proposicion.
     private void INSTRUCCION(Atributos _INSTRUCCION) {
         Atributos _FUNCION = new Atributos();
         Atributos _PROPOSICION = new Atributos();
@@ -273,6 +297,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 3 ----------------
+    // Traduce una definicion de funcion y genera etiquetas de entrada/salida.
     private void FUNCION(Atributos _FUNCION) {
         Atributos _ARGUMENTOS = new Atributos();
         Atributos _TIPO_RETORNO = new Atributos();
@@ -321,6 +346,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 4 ----------------
+    // Reconoce la lista inicial de parametros formales de una funcion.
     private void ARGUMENTOS(Atributos _ARGUMENTOS) {
         Atributos _TIPO_DATO = new Atributos();
         Atributos _ARGUMENTOS_2 = new Atributos();
@@ -344,6 +370,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 5 ----------------
+    // Reconoce parametros formales adicionales separados por coma.
     private void ARGUMENTOS_2(Atributos _ARGUMENTOS_2) {
         Atributos _TIPO_DATO = new Atributos();
         Atributos _ARGUMENTOS_21 = new Atributos();
@@ -368,6 +395,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 6 ----------------
+    // Reconoce declaraciones de variables; no emite C3D ejecutable.
     private void DECLARACION_VARS(Atributos _DECLARACION_VARS) {
         Atributos _TIPO_DATO = new Atributos();
         Atributos _DECLARACION_VARS_2 = new Atributos();
@@ -387,6 +415,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 7 ----------------
+    // Reconoce identificadores adicionales en una declaracion de variables.
     private void DECLARACION_VARS_2(Atributos _DECLARACION_VARS_2) {
         Atributos _DECLARACION_VARS_21 = new Atributos();
 
@@ -409,6 +438,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 8 ----------------
+    // Reconoce tipos de dato basicos del lenguaje.
     private void TIPO_DATO(Atributos _TIPO_DATO) {
         if (preAnalisis.equals("int")) {
             emparejar("int");
@@ -434,6 +464,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 9 ----------------
+    // Reconoce el tipo de retorno de una funcion.
     private void TIPO_RETORNO(Atributos _TIPO_RETORNO) {
         Atributos _TIPO_DATO = new Atributos();
 
@@ -456,6 +487,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 10 ---------------
+    // Traduce el resultado de return y propaga su lugar.
     private void RESULTADO(Atributos _RESULTADO) {
         Atributos _EXPRESION = new Atributos();
 
@@ -479,6 +511,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 11 ---------------
+    // Reconoce cero o mas proposiciones dentro de un bloque.
     private void PROPOSICIONES_OPTATIVAS(Atributos _PROPOSICIONES_OPTATIVAS) {
         Atributos _PROPOSICION = new Atributos();
         Atributos _PROPOSICIONES_OPTATIVAS1 = new Atributos();
@@ -501,6 +534,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 12 ---------------
+    // Traduce las proposiciones ejecutables: asignacion, if, while, print, etc.
     private void PROPOSICION(Atributos _PROPOSICION) {
         Atributos _DECLARACION_VARS = new Atributos();
         Atributos _PROPOSICION_2 = new Atributos();
@@ -605,6 +639,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 13 ---------------
+    // Decide si un identificador inicia asignacion o llamada a funcion.
     private void PROPOSICION_2(Atributos _PROPOSICION_2) {
         Atributos _EXPRESION = new Atributos();
         Atributos _LISTA_EXPRESIONES = new Atributos();
@@ -634,6 +669,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 14 ---------------
+    // Traduce la lista de argumentos reales de una llamada.
     private void LISTA_EXPRESIONES(Atributos _LISTA_EXPRESIONES) {
         Atributos _EXPRESION = new Atributos();
         Atributos _LISTA_EXPRESIONES_2 = new Atributos();
@@ -661,6 +697,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 15 ---------------
+    // Traduce argumentos reales adicionales separados por coma.
     private void LISTA_EXPRESIONES_2(Atributos _LISTA_EXPRESIONES_2) {
         Atributos _EXPRESION = new Atributos();
         Atributos _LISTA_EXPRESIONES_21 = new Atributos();
@@ -689,6 +726,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 16 ---------------
+    // Traduce una condicion relacional a salto condicional y salto falso.
     private void CONDICION(Atributos _CONDICION) {
         Atributos _EXPRESION1 = new Atributos();
         Atributos _EXPRESION2 = new Atributos();
@@ -711,6 +749,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 17 ---------------
+    // Traduce expresiones y sintetiza el lugar donde queda su valor.
     private void EXPRESION(Atributos _EXPRESION) {
         Atributos _TERMINO = new Atributos();
         Atributos _EXPRESION_2 = new Atributos();
@@ -747,6 +786,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 18 ---------------
+    // Traduce la cola de operadores opsuma usando temporales.
     private void EXPRESION_2(Atributos _EXPRESION_2) {
         Atributos _TERMINO = new Atributos();
         Atributos _EXPRESION_21 = new Atributos();
@@ -778,6 +818,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 19 ---------------
+    // Traduce terminos y conserva precedencia sobre operadores opsuma.
     private void TERMINO(Atributos _TERMINO) {
         Atributos _FACTOR = new Atributos();
         Atributos _TERMINO_2 = new Atributos();
@@ -805,6 +846,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 20 ---------------
+    // Traduce la cola de multiplicaciones usando temporales.
     private void TERMINO_2(Atributos _TERMINO_2) {
         Atributos _FACTOR = new Atributos();
         Atributos _TERMINO_21 = new Atributos();
@@ -836,6 +878,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 21 ---------------
+    // Traduce factores: ids, constantes, parentesis y llamadas.
     private void FACTOR(Atributos _FACTOR) {
         Atributos _FACTOR_2 = new Atributos();
         Atributos _EXPRESION = new Atributos();
@@ -885,6 +928,7 @@ public class GenCodigoInt {
     }
 
     // ---------------- Procedure 22 ---------------
+    // Decide si un id usado como factor es variable o llamada con retorno.
     private void FACTOR_2(Atributos _FACTOR_2) {
         Atributos _LISTA_EXPRESIONES = new Atributos();
 
