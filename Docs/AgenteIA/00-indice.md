@@ -41,3 +41,6 @@
 
 ## 08-explicacion-implementacion-gco.md
 - Explica exactamente que se modifico en `GenCodigoObj.java`, en que orden se ejecuta y que hace cada parte de la implementacion de Generacion de Codigo Objeto.
+
+## 09-resumen-sencillo-implementacion-equipo.md
+- Resumen sencillo para explicar que partes completo el equipo sobre el shell base de Gil, desde semantica hasta GCO.
